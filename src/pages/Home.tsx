@@ -14,59 +14,31 @@ interface DateRange {
   endDate: DateType
 }
 
-interface FormattedDates {
-  startDate: string
-  endDate: string
-}
-
 const Home = () => {
   const [value, setValue] = useState<DateRange | null>({
     startDate: formatDate(new Date()),
     endDate: formatDate(new Date(new Date().setMonth(11)))
   })
 
-  const [formattedDates, setFormattedDates] = useState<FormattedDates>()
-
   const handleValueChange = (newValue: DateRange | null) => {
     setValue(newValue)
   }
 
-  const formatScrapingDates = () => {
-    setFormattedDates({
-      startDate: formatDateWithoutDashes((value?.startDate as string) || ''),
-      endDate: formatDateWithoutDashes((value?.endDate as string) || '')
-    })
-  }
-
   const { data, loading, error, fetchData } = useFetch()
-  // const handleClick = async () => {
-  //   await formatScrapingDates()
-  //   // if (!formattedDates) return
-
-  //   const scrapeUrl = `scrape?startdate=${formattedDates?.startDate}&enddate=${formattedDates?.endDate}`
-  //   await fetchData(scrapeUrl)
-
-  //   // if (!error && !loading && data.length) {
-  //   // console.log('success')
-  //   const csvData = transformData(data)
-  //   downloadCSV(csvData, 'data.csv')
-  //   // }
-  //   // console.log(data)
-  // }
 
   useEffect(() => {
     if (!error && !loading && data.length) {
       const csvData = transformData(data)
       downloadCSV(csvData, 'data.csv')
-      console.log('success')
     }
   }, [data, loading, error])
 
   const handleClick = async () => {
-    await formatScrapingDates()
-    // if (!formattedDates) return
-
-    const scrapeUrl = `scrape?startdate=${formattedDates?.startDate}&enddate=${formattedDates?.endDate}`
+    const startDate = formatDateWithoutDashes(
+      (value?.startDate as string) || ''
+    )
+    const endDate = formatDateWithoutDashes((value?.endDate as string) || '')
+    const scrapeUrl = `scrape?startdate=${startDate}&enddate=${endDate}`
     fetchData(scrapeUrl)
   }
 
@@ -80,13 +52,6 @@ const Home = () => {
           </div>
           <Datepicker value={value} onChange={handleValueChange} />
           <div className="flex gap-x-5">
-            {/* <button
-              type="button"
-              className="your-button-styles-here"
-              onClick={formatScrapingDates}
-            >
-              Format date
-            </button> */}
             <CSVDownloadBtn handleClick={handleClick} />
           </div>
         </div>

@@ -8,13 +8,12 @@ type Game = {
   team2: TeamResult
 }
 
-type GameData = {
+export type GameData = {
   date: string
   result: string
 }
 
 export const transformData = (gameData: GameData[]) => {
-  console.log(gameData)
   const data = gameData.map((el) => {
     return { date: el.date, result: JSON.parse(el.result) }
   })
