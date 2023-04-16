@@ -42,6 +42,8 @@ const Home = () => {
     fetchData(scrapeUrl)
   }
 
+  console.log('env:' + import.meta.env.VITE_API_BASE_URL)
+
   return (
     <>
       <div className="my-10 flex items-start justify-center border-2 border-solid border-black">
